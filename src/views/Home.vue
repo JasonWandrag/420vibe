@@ -14,12 +14,22 @@
             Your journey to the perfect vibe starts here.
           </p>
           <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <router-link to="/products" class="btn-secondary text-lg px-8 py-4">
-              Shop Now
-            </router-link>
-            <button class="btn-outline border-white text-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4">
-              Learn More
-            </button>
+            <template v-if="user">
+              <router-link to="/products" class="btn-secondary text-lg px-8 py-4">
+                Shop Now
+              </router-link>
+              <button class="btn-outline border-white text-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4">
+                Learn More
+              </button>
+            </template>
+            <template v-else>
+              <router-link to="/register" class="btn-secondary text-lg px-8 py-4">
+                Sign Up to Shop
+              </router-link>
+              <router-link to="/login" class="btn-outline border-white text-white hover:bg-white hover:text-primary-600 text-lg px-8 py-4">
+                Login
+              </router-link>
+            </template>
           </div>
         </div>
       </div>
@@ -37,47 +47,86 @@
           </p>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div 
-            v-for="product in featuredProducts" 
-            :key="product.id"
-            class="card group cursor-pointer"
-            @click="$router.push(`/products/${product.id}`)"
-          >
-            <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-t-xl overflow-hidden">
-              <img 
-                :src="product.image" 
-                :alt="product.name"
-                class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
-              />
-            </div>
-            <div class="p-6">
-              <div class="flex items-center justify-between mb-2">
-                <span class="text-sm font-medium text-primary-600 uppercase tracking-wide">
-                  {{ product.category }}
-                </span>
-                <span class="text-sm text-gray-500">⭐ {{ product.rating }}</span>
+        <template v-if="user">
+          <!-- Loading State -->
+          <div v-if="productsStore.loading" class="text-center py-12">
+            <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+            <p class="mt-4 text-gray-600">Loading featured products...</p>
+          </div>
+
+          <!-- Featured Products Grid -->
+          <div v-else-if="featuredProducts.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div 
+              v-for="product in featuredProducts" 
+              :key="product.id"
+              class="card group cursor-pointer"
+              @click="$router.push(`/products/${product.id}`)"
+            >
+              <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-t-xl overflow-hidden">
+                <img 
+                  :src="product.image" 
+                  :alt="product.name"
+                  class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                />
               </div>
-              <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
-              <p class="text-gray-600 mb-4">{{ product.description }}</p>
-              <div class="flex items-center justify-between">
-                <span class="text-2xl font-bold text-primary-600">${{ product.price }}</span>
-                <button 
-                  @click.stop="addToCart(product)"
-                  class="btn-primary"
-                >
-                  Add to Cart
-                </button>
+              <div class="p-6">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-sm font-medium text-primary-600 uppercase tracking-wide">
+                    {{ product.category }}
+                  </span>
+                  <span class="text-sm text-gray-500">⭐ {{ product.rating }}</span>
+                </div>
+                <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
+                <p class="text-gray-600 mb-4">{{ product.description }}</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-2xl font-bold text-primary-600">${{ product.price }}</span>
+                  <button 
+                    @click.stop="addToCart(product)"
+                    class="btn-primary"
+                  >
+                    Add to Cart
+                  </button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <div class="text-center mt-12">
-          <router-link to="/products" class="btn-outline text-lg px-8 py-3">
-            View All Products
-          </router-link>
-        </div>
+          <!-- No Featured Products -->
+          <div v-else class="text-center py-12">
+            <p class="text-gray-600">No featured products available at the moment.</p>
+          </div>
+
+          <div v-if="featuredProducts.length > 0" class="text-center mt-12">
+            <router-link to="/products" class="btn-outline text-lg px-8 py-3">
+              View All Products
+            </router-link>
+          </div>
+        </template>
+
+        <template v-else>
+          <!-- Login Required Message -->
+          <div class="text-center py-12">
+            <div class="max-w-md mx-auto">
+              <div class="w-20 h-20 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-10 h-10 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                </svg>
+              </div>
+              <h3 class="text-2xl font-bold text-gray-900 mb-4">Login Required</h3>
+              <p class="text-gray-600 mb-8">
+                Please sign up or login to view our premium cannabis products and start shopping.
+              </p>
+              <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <router-link to="/register" class="btn-primary text-lg px-8 py-3">
+                  Create Account
+                </router-link>
+                <router-link to="/login" class="btn-outline text-lg px-8 py-3">
+                  Login
+                </router-link>
+              </div>
+            </div>
+          </div>
+        </template>
       </div>
     </section>
 
@@ -152,47 +201,30 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
+import { useAuthStore } from '../stores/auth'
+import { useProductsStore } from '../stores/products'
 
 const cartStore = useCartStore()
+const authStore = useAuthStore()
+const productsStore = useProductsStore()
 
-const featuredProducts = ref([
-  {
-    id: 1,
-    name: 'Premium OG Kush',
-    category: 'Flower',
-    price: 45.00,
-    rating: 4.8,
-    description: 'Classic indica-dominant strain with earthy, pine flavors and relaxing effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 2,
-    name: 'Blue Dream Vape Cart',
-    category: 'Vape',
-    price: 35.00,
-    rating: 4.9,
-    description: 'Smooth sativa-dominant hybrid with sweet berry flavors and uplifting effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 3,
-    name: 'CBD Gummies',
-    category: 'Edibles',
-    price: 25.00,
-    rating: 4.7,
-    description: 'Delicious mixed berry gummies with 10mg CBD each for relaxation and wellness.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  }
-])
+const user = computed(() => authStore.user)
+
+// Get featured products from the store
+const featuredProducts = computed(() => {
+  return productsStore.featuredProducts.slice(0, 3) // Show only first 3 featured products
+})
 
 const addToCart = (product) => {
   cartStore.addItem(product)
   // You could add a toast notification here
 }
 
-onMounted(() => {
+onMounted(async () => {
+  // Fetch products from Firebase
+  await productsStore.fetchProducts()
   cartStore.init()
 })
 </script>

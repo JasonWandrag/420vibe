@@ -142,73 +142,17 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCartStore } from '../stores/cart'
+import { useProductsStore } from '../stores/products'
 
 const route = useRoute()
 const cartStore = useCartStore()
+const productsStore = useProductsStore()
 
 const loading = ref(true)
 const quantity = ref(1)
 
-// Mock product data - in a real app, this would come from Firebase
-const products = ref([
-  {
-    id: 1,
-    name: 'Premium OG Kush',
-    category: 'Flower',
-    price: 45.00,
-    rating: 4.8,
-    reviews: 127,
-    thc: 22,
-    cbd: 1,
-    strainType: 'Indica',
-    effects: 'Relaxing, Sleepy, Happy',
-    description: 'Classic indica-dominant strain with earthy, pine flavors and relaxing effects. Perfect for evening use and stress relief.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=600&h=600&fit=crop',
-    reviewList: [
-      {
-        id: 1,
-        author: 'John D.',
-        rating: 5,
-        date: '2 days ago',
-        comment: 'Amazing quality and effects. Perfect for relaxing after a long day.'
-      },
-      {
-        id: 2,
-        author: 'Sarah M.',
-        rating: 4,
-        date: '1 week ago',
-        comment: 'Great product, fast shipping. Will definitely order again.'
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Blue Dream Vape Cart',
-    category: 'Vape',
-    price: 35.00,
-    rating: 4.9,
-    reviews: 89,
-    thc: 18,
-    cbd: 2,
-    strainType: 'Sativa',
-    effects: 'Uplifting, Creative, Energetic',
-    description: 'Smooth sativa-dominant hybrid with sweet berry flavors and uplifting effects. Great for daytime use.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=600&h=600&fit=crop',
-    reviewList: [
-      {
-        id: 1,
-        author: 'Mike R.',
-        rating: 5,
-        date: '3 days ago',
-        comment: 'Love the flavor and the effects are exactly what I was looking for.'
-      }
-    ]
-  }
-])
-
 const product = computed(() => {
-  const productId = parseInt(route.params.id)
-  return products.value.find(p => p.id === productId)
+  return productsStore.currentProduct
 })
 
 const increaseQuantity = () => {
@@ -230,12 +174,10 @@ const addToCart = () => {
   }
 }
 
-onMounted(() => {
-  // Simulate loading
-  setTimeout(() => {
-    loading.value = false
-  }, 500)
-  
+onMounted(async () => {
+  const productId = route.params.id
+  await productsStore.fetchProduct(productId)
+  loading.value = false
   cartStore.init()
 })
 </script>

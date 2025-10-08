@@ -9,6 +9,15 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue'
 import Navbar from './components/Navbar.vue'
 import Footer from './components/Footer.vue'
+import { useAuthStore } from './stores/auth'
+
+const authStore = useAuthStore()
+
+onMounted(async () => {
+  // Initialize authentication state when app starts
+  await authStore.init()
+})
 </script>

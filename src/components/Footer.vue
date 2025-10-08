@@ -56,8 +56,8 @@
       <div class="border-t border-gray-800 mt-8 pt-8 text-center">
         <p class="text-gray-400">
           © 2024 420Vibe. All rights reserved. | 
-          <a href="#" class="hover:text-primary-400 transition-colors">Privacy Policy</a> | 
-          <a href="#" class="hover:text-primary-400 transition-colors">Terms of Service</a>
+          <router-link to="/privacy" class="hover:text-primary-400 transition-colors">Privacy Policy</router-link> | 
+          <router-link to="/terms" class="hover:text-primary-400 transition-colors">Terms of Service</router-link>
         </p>
         <p class="text-gray-500 text-sm mt-2">
           Must be 21+ to purchase. Please consume responsibly.

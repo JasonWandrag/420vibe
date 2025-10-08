@@ -145,9 +145,9 @@
             />
             <label for="agree-terms" class="ml-2 block text-sm text-gray-900">
               I agree to the
-              <a href="#" class="text-primary-600 hover:text-primary-500">Terms of Service</a>
+              <router-link to="/terms" class="text-primary-600 hover:text-primary-500">Terms of Service</router-link>
               and
-              <a href="#" class="text-primary-600 hover:text-primary-500">Privacy Policy</a>
+              <router-link to="/privacy" class="text-primary-600 hover:text-primary-500">Privacy Policy</router-link>
             </label>
           </div>
 
@@ -189,10 +189,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const form = ref({
@@ -228,7 +229,10 @@ const handleRegister = async () => {
     }
     
     await authStore.register(form.value.email, form.value.password, userData)
-    router.push('/')
+    
+    // Redirect to the intended page or home
+    const redirectTo = route.query.redirect || '/'
+    router.push(redirectTo)
   } catch (error) {
     // Error is handled by the store
   }

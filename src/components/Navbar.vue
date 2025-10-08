@@ -19,23 +19,29 @@
           >
             Home
           </router-link>
-          <router-link 
-            to="/products" 
-            class="text-gray-700 hover:text-primary-600 font-medium transition-colors"
-            :class="{ 'text-primary-600': $route.name === 'Products' }"
-          >
-            Products
-          </router-link>
-          <router-link 
-            to="/cart" 
-            class="text-gray-700 hover:text-primary-600 font-medium transition-colors flex items-center space-x-1"
-            :class="{ 'text-primary-600': $route.name === 'Cart' }"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
-            </svg>
-            <span>Cart ({{ cartItemCount }})</span>
-          </router-link>
+          <template v-if="user">
+            <router-link 
+              to="/products" 
+              class="text-gray-700 hover:text-primary-600 font-medium transition-colors"
+              :class="{ 'text-primary-600': $route.name === 'Products' }"
+            >
+              Products
+            </router-link>
+            <router-link 
+              to="/cart" 
+              class="text-gray-700 hover:text-primary-600 font-medium transition-colors flex items-center space-x-1"
+              :class="{ 'text-primary-600': $route.name === 'Cart' }"
+            >
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m8 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01"></path>
+              </svg>
+              <span>Cart ({{ cartItemCount }})</span>
+            </router-link>
+          </template>
+          <template v-else>
+            <span class="text-gray-500 font-medium">Products</span>
+            <span class="text-gray-500 font-medium">Cart</span>
+          </template>
         </div>
 
         <!-- User Menu -->
@@ -94,21 +100,21 @@
           >
             Home
           </router-link>
-          <router-link 
-            to="/products" 
-            class="block px-3 py-2 text-gray-700 hover:text-primary-600 font-medium"
-            @click="mobileMenuOpen = false"
-          >
-            Products
-          </router-link>
-          <router-link 
-            to="/cart" 
-            class="block px-3 py-2 text-gray-700 hover:text-primary-600 font-medium"
-            @click="mobileMenuOpen = false"
-          >
-            Cart ({{ cartItemCount }})
-          </router-link>
           <template v-if="user">
+            <router-link 
+              to="/products" 
+              class="block px-3 py-2 text-gray-700 hover:text-primary-600 font-medium"
+              @click="mobileMenuOpen = false"
+            >
+              Products
+            </router-link>
+            <router-link 
+              to="/cart" 
+              class="block px-3 py-2 text-gray-700 hover:text-primary-600 font-medium"
+              @click="mobileMenuOpen = false"
+            >
+              Cart ({{ cartItemCount }})
+            </router-link>
             <router-link 
               to="/profile" 
               class="block px-3 py-2 text-gray-700 hover:text-primary-600 font-medium"
@@ -124,6 +130,8 @@
             </button>
           </template>
           <template v-else>
+            <span class="block px-3 py-2 text-gray-500 font-medium">Products (Login Required)</span>
+            <span class="block px-3 py-2 text-gray-500 font-medium">Cart (Login Required)</span>
             <router-link 
               to="/login" 
               class="block px-3 py-2 text-gray-700 hover:text-primary-600 font-medium"

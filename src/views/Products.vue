@@ -9,6 +9,19 @@
         <p class="text-lg text-gray-600">
           Discover our carefully curated selection of premium cannabis products.
         </p>
+        
+        <!-- Firebase Connection Status -->
+        <div v-if="productsStore.error" class="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <div class="flex items-center">
+            <svg class="w-5 h-5 text-yellow-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+            </svg>
+            <div>
+              <p class="text-sm font-medium text-yellow-800">Demo Mode</p>
+              <p class="text-xs text-yellow-700">Showing sample products. Connect to Firebase to see your actual product database.</p>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Filters -->
@@ -54,8 +67,14 @@
         </div>
       </div>
 
+      <!-- Loading State -->
+      <div v-if="productsStore.loading" class="text-center py-12">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto"></div>
+        <p class="mt-4 text-gray-600">Loading products...</p>
+      </div>
+
       <!-- Products Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         <div 
           v-for="product in filteredProducts" 
           :key="product.id"
@@ -92,12 +111,18 @@
       </div>
 
       <!-- Empty State -->
-      <div v-if="filteredProducts.length === 0" class="text-center py-12">
+      <div v-if="!productsStore.loading && filteredProducts.length === 0" class="text-center py-12">
         <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path>
         </svg>
         <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
         <p class="text-gray-600">Try adjusting your filters or search terms.</p>
+        <div v-if="productsStore.error" class="mt-4 p-4 bg-red-50 rounded-lg">
+          <p class="text-sm text-red-600 font-medium">Error: {{ productsStore.error }}</p>
+          <p class="text-xs text-red-500 mt-2">
+            If you're seeing mock data, please check your Firebase configuration in the .env file.
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -106,90 +131,17 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
+import { useProductsStore } from '../stores/products'
 
 const cartStore = useCartStore()
-
-const products = ref([
-  {
-    id: 1,
-    name: 'Premium OG Kush',
-    category: 'flower',
-    price: 45.00,
-    rating: 4.8,
-    description: 'Classic indica-dominant strain with earthy, pine flavors and relaxing effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 2,
-    name: 'Blue Dream Vape Cart',
-    category: 'vape',
-    price: 35.00,
-    rating: 4.9,
-    description: 'Smooth sativa-dominant hybrid with sweet berry flavors and uplifting effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 3,
-    name: 'CBD Gummies',
-    category: 'edibles',
-    price: 25.00,
-    rating: 4.7,
-    description: 'Delicious mixed berry gummies with 10mg CBD each for relaxation and wellness.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 4,
-    name: 'Sour Diesel',
-    category: 'flower',
-    price: 42.00,
-    rating: 4.6,
-    description: 'Energizing sativa with diesel-like aroma and uplifting cerebral effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 5,
-    name: 'Gelato Live Resin',
-    category: 'concentrates',
-    price: 55.00,
-    rating: 4.9,
-    description: 'Premium live resin with sweet, dessert-like flavors and balanced effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 6,
-    name: 'THC Chocolate Bar',
-    category: 'edibles',
-    price: 30.00,
-    rating: 4.5,
-    description: 'Rich dark chocolate infused with 100mg THC, divided into 10mg squares.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 7,
-    name: 'Glass Bong',
-    category: 'accessories',
-    price: 85.00,
-    rating: 4.8,
-    description: 'High-quality borosilicate glass bong with percolator for smooth hits.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  },
-  {
-    id: 8,
-    name: 'Wedding Cake',
-    category: 'flower',
-    price: 48.00,
-    rating: 4.7,
-    description: 'Indica-dominant hybrid with sweet, vanilla cake flavors and relaxing effects.',
-    image: 'https://images.unsplash.com/photo-1607853202273-797f1c22a38e?w=400&h=400&fit=crop'
-  }
-])
+const productsStore = useProductsStore()
 
 const selectedCategory = ref('')
 const sortBy = ref('name')
 const searchQuery = ref('')
 
 const filteredProducts = computed(() => {
-  let filtered = products.value
+  let filtered = productsStore.products
 
   // Filter by category
   if (selectedCategory.value) {
@@ -229,7 +181,8 @@ const addToCart = (product) => {
   cartStore.addItem(product)
 }
 
-onMounted(() => {
+onMounted(async () => {
+  await productsStore.fetchProducts()
   cartStore.init()
 })
 </script>

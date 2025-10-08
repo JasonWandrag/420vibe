@@ -139,10 +139,11 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
 
 const form = ref({
@@ -154,7 +155,10 @@ const form = ref({
 const handleLogin = async () => {
   try {
     await authStore.login(form.value.email, form.value.password)
-    router.push('/')
+    
+    // Redirect to the intended page or home
+    const redirectTo = route.query.redirect || '/'
+    router.push(redirectTo)
   } catch (error) {
     // Error is handled by the store
   }
