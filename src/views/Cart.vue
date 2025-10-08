@@ -48,7 +48,7 @@
                 <div class="flex-1 min-w-0">
                   <h3 class="text-lg font-medium text-gray-900">{{ item.name }}</h3>
                   <p class="text-sm text-gray-500 capitalize">{{ item.category }}</p>
-                  <p class="text-lg font-semibold text-primary-600">${{ item.price }}</p>
+                  <p class="text-lg font-semibold text-primary-600">R{{ item.price }}</p>
                 </div>
                 
                 <div class="flex items-center space-x-2">
@@ -69,7 +69,7 @@
                 
                 <div class="text-right">
                   <p class="text-lg font-semibold text-gray-900">
-                    ${{ (item.price * item.quantity).toFixed(2) }}
+                    R{{ (item.price * item.quantity).toFixed(2) }}
                   </p>
                   <button 
                     @click="removeItem(item.id)"
@@ -91,20 +91,20 @@
             <div class="space-y-3 mb-6">
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600">Subtotal</span>
-                <span class="text-gray-900">${{ cartStore.totalPrice.toFixed(2) }}</span>
+                <span class="text-gray-900">R{{ cartStore.totalPrice.toFixed(2) }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600">Shipping</span>
-                <span class="text-gray-900">${{ shippingCost.toFixed(2) }}</span>
+                <span class="text-gray-900">R{{ shippingCost.toFixed(2) }}</span>
               </div>
               <div class="flex justify-between text-sm">
                 <span class="text-gray-600">Tax</span>
-                <span class="text-gray-900">${{ taxAmount.toFixed(2) }}</span>
+                <span class="text-gray-900">R{{ taxAmount.toFixed(2) }}</span>
               </div>
               <div class="border-t pt-3">
                 <div class="flex justify-between text-lg font-semibold">
                   <span class="text-gray-900">Total</span>
-                  <span class="text-primary-600">${{ totalAmount.toFixed(2) }}</span>
+                  <span class="text-primary-600">R{{ totalAmount.toFixed(2) }}</span>
                 </div>
               </div>
             </div>

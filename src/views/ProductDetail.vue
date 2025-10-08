@@ -44,7 +44,7 @@
                 {{ product.name }}
               </h1>
               <p class="text-xl font-bold text-primary-600 mb-4">
-                ${{ product.price }}
+                R{{ product.price }}
               </p>
               <p class="text-gray-600 text-lg leading-relaxed">
                 {{ product.description }}
@@ -101,7 +101,7 @@
                   @click="addToCart"
                   class="btn-primary flex-1 text-lg py-3"
                 >
-                  Add to Cart - ${{ (product.price * quantity).toFixed(2) }}
+                  Add to Cart - R{{ (product.price * quantity).toFixed(2) }}
                 </button>
                 <button class="btn-outline px-6 py-3">
                   <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

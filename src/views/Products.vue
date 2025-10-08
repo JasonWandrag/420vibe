@@ -83,9 +83,10 @@
         >
           <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-t-xl overflow-hidden">
             <img 
-              :src="product.image" 
+              :src="getProductImage(product)" 
               :alt="product.name"
               class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              @error="handleImageError"
             />
           </div>
           <div class="p-6">
@@ -96,9 +97,28 @@
               <span class="text-sm text-gray-500">⭐ {{ product.rating }}</span>
             </div>
             <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
-            <p class="text-gray-600 mb-4 text-sm">{{ product.description }}</p>
+            <p class="text-gray-600 mb-2 text-sm">{{ product.description }}</p>
+            
+            <!-- Product Details -->
+            <div v-if="product.thc || product.cbd || product.strainType" class="mb-4">
+              <div class="flex flex-wrap gap-2 text-xs">
+                <span v-if="product.thc" class="bg-green-100 text-green-800 px-2 py-1 rounded">
+                  THC: {{ product.thc }}%
+                </span>
+                <span v-if="product.cbd" class="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                  CBD: {{ product.cbd }}%
+                </span>
+                <span v-if="product.strainType" class="bg-purple-100 text-purple-800 px-2 py-1 rounded">
+                  {{ product.strainType }}
+                </span>
+              </div>
+              <p v-if="product.effects" class="text-xs text-gray-500 mt-1">
+                Effects: {{ product.effects }}
+              </p>
+            </div>
+            
             <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-primary-600">${{ product.price }}</span>
+              <span class="text-2xl font-bold text-primary-600">R{{ product.price }}</span>
               <button 
                 @click.stop="addToCart(product)"
                 class="btn-primary"
@@ -179,6 +199,31 @@ const filteredProducts = computed(() => {
 
 const addToCart = (product) => {
   cartStore.addItem(product)
+}
+
+// Helper function to handle product images (base64 or URL)
+const getProductImage = (product) => {
+  if (!product.image) {
+    return 'https://via.placeholder.com/400x400?text=No+Image'
+  }
+  
+  // Check if it's a base64 image
+  if (product.image.startsWith('data:image/')) {
+    return product.image
+  }
+  
+  // Check if it's a URL
+  if (product.image.startsWith('http')) {
+    return product.image
+  }
+  
+  // Default fallback
+  return 'https://via.placeholder.com/400x400?text=No+Image'
+}
+
+// Handle image loading errors
+const handleImageError = (event) => {
+  event.target.src = 'https://via.placeholder.com/400x400?text=Image+Error'
 }
 
 onMounted(async () => {

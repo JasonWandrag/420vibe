@@ -44,23 +44,34 @@ export const useProductsStore = defineStore('products', {
         console.log('Attempting to fetch products from Firebase...')
         const productsRef = collection(db, 'products')
         
-        // Try with active filter first, fallback to all products if that fails
-        let q = query(productsRef, where('active', '==', true), orderBy('createdAt', 'desc'))
+        // Fetch all products from the collection
+        let q = query(productsRef, orderBy('createdAt', 'desc'))
         let querySnapshot = await getDocs(q)
         
-        // If no products found with active filter, try without it
-        if (querySnapshot.empty) {
-          console.log('No active products found, fetching all products...')
-          q = query(productsRef, orderBy('createdAt', 'desc'))
-          querySnapshot = await getDocs(q)
-        }
-        
-        this.products = querySnapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        }))
+        this.products = querySnapshot.docs.map(doc => {
+          const data = doc.data()
+          return {
+            id: doc.id,
+            name: data.name || 'Unnamed Product',
+            description: data.description || '',
+            price: data.price || 0,
+            rating: data.rating || 0,
+            image: data.image || '', // This will be the base64 string
+            category: data.category || 'flower',
+            featured: data.featured || false,
+            active: data.active !== false, // Default to true if not specified
+            thc: data.thc || 0,
+            cbd: data.cbd || 0,
+            strainType: data.strainType || 'Hybrid',
+            effects: data.effects || '',
+            createdAt: data.createdAt,
+            updatedAt: data.updatedAt,
+            ...data // Include any other fields from the document
+          }
+        })
         
         console.log(`✅ Successfully fetched ${this.products.length} products from Firebase`)
+        console.log('Sample product:', this.products[0])
       } catch (error) {
         this.error = error.message
         console.error('❌ Error fetching products from Firebase:', error)
@@ -102,7 +113,7 @@ export const useProductsStore = defineStore('products', {
     },
 
     loadMockProducts() {
-      // Fallback mock data
+      // Fallback mock data with base64 image example
       this.products = [
         {
           id: 1,
@@ -117,7 +128,9 @@ export const useProductsStore = defineStore('products', {
           thc: 22,
           cbd: 1,
           strainType: 'Indica',
-          effects: 'Relaxing, Sleepy, Happy'
+          effects: 'Relaxing, Sleepy, Happy',
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         {
           id: 2,
@@ -132,7 +145,9 @@ export const useProductsStore = defineStore('products', {
           thc: 18,
           cbd: 2,
           strainType: 'Sativa',
-          effects: 'Uplifting, Creative, Energetic'
+          effects: 'Uplifting, Creative, Energetic',
+          createdAt: new Date(),
+          updatedAt: new Date()
         },
         {
           id: 3,
@@ -147,7 +162,9 @@ export const useProductsStore = defineStore('products', {
           thc: 0,
           cbd: 10,
           strainType: 'CBD',
-          effects: 'Relaxing, Calming'
+          effects: 'Relaxing, Calming',
+          createdAt: new Date(),
+          updatedAt: new Date()
         }
       ]
     },

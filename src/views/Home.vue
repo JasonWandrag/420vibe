@@ -64,9 +64,10 @@
             >
               <div class="aspect-w-1 aspect-h-1 bg-gray-200 rounded-t-xl overflow-hidden">
                 <img 
-                  :src="product.image" 
+                  :src="getProductImage(product)" 
                   :alt="product.name"
                   class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+                  @error="handleImageError"
                 />
               </div>
               <div class="p-6">
@@ -79,7 +80,7 @@
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
                 <p class="text-gray-600 mb-4">{{ product.description }}</p>
                 <div class="flex items-center justify-between">
-                  <span class="text-2xl font-bold text-primary-600">${{ product.price }}</span>
+                  <span class="text-2xl font-bold text-primary-600">R{{ product.price }}</span>
                   <button 
                     @click.stop="addToCart(product)"
                     class="btn-primary"
@@ -220,6 +221,31 @@ const featuredProducts = computed(() => {
 const addToCart = (product) => {
   cartStore.addItem(product)
   // You could add a toast notification here
+}
+
+// Helper function to handle product images (base64 or URL)
+const getProductImage = (product) => {
+  if (!product.image) {
+    return 'https://via.placeholder.com/400x400?text=No+Image'
+  }
+  
+  // Check if it's a base64 image
+  if (product.image.startsWith('data:image/')) {
+    return product.image
+  }
+  
+  // Check if it's a URL
+  if (product.image.startsWith('http')) {
+    return product.image
+  }
+  
+  // Default fallback
+  return 'https://via.placeholder.com/400x400?text=No+Image'
+}
+
+// Handle image loading errors
+const handleImageError = (event) => {
+  event.target.src = 'https://via.placeholder.com/400x400?text=Image+Error'
 }
 
 onMounted(async () => {
