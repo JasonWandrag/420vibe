@@ -1,12 +1,12 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-gray-50 py-6 sm:py-8">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="mb-8">
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">
+      <div class="mb-6 sm:mb-8">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 mb-3 sm:mb-4">
           Our Products
         </h1>
-        <p class="text-lg text-gray-600">
+        <p class="text-base sm:text-lg text-gray-600">
           Discover our carefully curated selection of premium cannabis products.
         </p>
         
@@ -25,13 +25,13 @@
       </div>
 
       <!-- Filters -->
-      <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-        <div class="flex flex-wrap gap-4 items-center">
-          <div class="flex items-center space-x-2">
+      <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 mb-6 sm:mb-8">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Category:</label>
             <select 
               v-model="selectedCategory" 
-              class="input-field w-auto"
+              class="input-field w-full"
             >
               <option value="">All Categories</option>
               <option value="flower">Flower</option>
@@ -42,11 +42,11 @@
             </select>
           </div>
           
-          <div class="flex items-center space-x-2">
+          <div class="space-y-2">
             <label class="text-sm font-medium text-gray-700">Sort by:</label>
             <select 
               v-model="sortBy" 
-              class="input-field w-auto"
+              class="input-field w-full"
             >
               <option value="name">Name</option>
               <option value="price-low">Price: Low to High</option>
@@ -55,13 +55,13 @@
             </select>
           </div>
 
-          <div class="flex items-center space-x-2">
+          <div class="space-y-2 sm:col-span-2 lg:col-span-1">
             <label class="text-sm font-medium text-gray-700">Search:</label>
             <input 
               v-model="searchQuery"
               type="text" 
               placeholder="Search products..."
-              class="input-field w-64"
+              class="input-field w-full"
             />
           </div>
         </div>
@@ -74,7 +74,7 @@
       </div>
 
       <!-- Products Grid -->
-      <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         <div 
           v-for="product in filteredProducts" 
           :key="product.id"
@@ -85,43 +85,43 @@
             <img 
               :src="getProductImage(product)" 
               :alt="product.name"
-              class="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
+              class="w-full h-48 sm:h-56 lg:h-64 object-cover group-hover:scale-105 transition-transform duration-300"
               @error="handleImageError"
             />
           </div>
-          <div class="p-6">
+          <div class="p-4 sm:p-6">
             <div class="flex items-center justify-between mb-2">
-              <span class="text-sm font-medium text-primary-600 uppercase tracking-wide">
+              <span class="text-xs sm:text-sm font-medium text-primary-600 uppercase tracking-wide">
                 {{ product.category }}
               </span>
-              <span class="text-sm text-gray-500">⭐ {{ product.rating }}</span>
+              <span class="text-xs sm:text-sm text-gray-500">⭐ {{ product.rating }}</span>
             </div>
-            <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
-            <p class="text-gray-600 mb-2 text-sm">{{ product.description }}</p>
+            <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{{ product.name }}</h3>
+            <p class="text-gray-600 mb-2 text-xs sm:text-sm line-clamp-2">{{ product.description }}</p>
             
             <!-- Product Details -->
-            <div v-if="product.thc || product.cbd || product.strainType" class="mb-4">
-              <div class="flex flex-wrap gap-2 text-xs">
-                <span v-if="product.thc" class="bg-green-100 text-green-800 px-2 py-1 rounded">
+            <div v-if="product.thc || product.cbd || product.strainType" class="mb-3 sm:mb-4">
+              <div class="flex flex-wrap gap-1 sm:gap-2 text-xs">
+                <span v-if="product.thc" class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs">
                   THC: {{ product.thc }}%
                 </span>
-                <span v-if="product.cbd" class="bg-blue-100 text-blue-800 px-2 py-1 rounded">
+                <span v-if="product.cbd" class="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                   CBD: {{ product.cbd }}%
                 </span>
-                <span v-if="product.strainType" class="bg-purple-100 text-purple-800 px-2 py-1 rounded">
+                <span v-if="product.strainType" class="bg-purple-100 text-purple-800 px-2 py-1 rounded text-xs">
                   {{ product.strainType }}
                 </span>
               </div>
-              <p v-if="product.effects" class="text-xs text-gray-500 mt-1">
+              <p v-if="product.effects" class="text-xs text-gray-500 mt-1 line-clamp-1">
                 Effects: {{ product.effects }}
               </p>
             </div>
             
-            <div class="flex items-center justify-between">
-              <span class="text-2xl font-bold text-primary-600">R{{ product.price }}</span>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-0">
+              <span class="text-xl sm:text-2xl font-bold text-primary-600">R{{ product.price }}</span>
               <button 
                 @click.stop="addToCart(product)"
-                class="btn-primary"
+                class="btn-primary text-sm sm:text-base px-4 py-2 w-full sm:w-auto"
               >
                 Add to Cart
               </button>

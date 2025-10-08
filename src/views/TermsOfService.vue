@@ -1,27 +1,27 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8">
+  <div class="min-h-screen bg-gray-50 py-6 sm:py-8">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
       <!-- Header -->
-      <div class="text-center mb-12">
-        <h1 class="text-4xl font-display font-bold text-gray-900 mb-4">
+      <div class="text-center mb-8 sm:mb-12">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl font-display font-bold text-gray-900 mb-3 sm:mb-4">
           Terms of Service
         </h1>
-        <p class="text-lg text-gray-600">
+        <p class="text-base sm:text-lg text-gray-600">
           Last updated: {{ lastUpdated }}
         </p>
       </div>
 
       <!-- Content -->
-      <div class="bg-white rounded-lg shadow-sm p-8 space-y-8">
+      <div class="bg-white rounded-lg shadow-sm p-4 sm:p-6 lg:p-8 space-y-6 sm:space-y-8">
         
         <!-- Introduction -->
         <section>
-          <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
-          <p class="text-gray-700 leading-relaxed">
+          <h2 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">1. Introduction</h2>
+          <p class="text-sm sm:text-base text-gray-700 leading-relaxed">
             Welcome to 420Vibe. These Terms of Service ("Terms") govern your use of our website and services. 
             By registering, accessing, or using our platform, you agree to be legally bound by these terms.
           </p>
-          <p class="text-gray-700 leading-relaxed mt-4">
+          <p class="text-sm sm:text-base text-gray-700 leading-relaxed mt-3 sm:mt-4">
             Our website is a private, members-only portal that provides legal access to premium cannabis products 
             and related services. You must be at least 21 years of age to use our services.
           </p>
@@ -29,7 +29,7 @@
 
         <!-- Membership -->
         <section>
-          <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Membership & Registration</h2>
+          <h2 class="text-xl sm:text-2xl font-semibold text-gray-900 mb-3 sm:mb-4">2. Membership & Registration</h2>
           <div class="space-y-4">
             <div>
               <h3 class="text-lg font-medium text-gray-800 mb-2">2.1 Registration Requirements</h3>
